@@ -27,7 +27,7 @@ struct Console *cur_console;
 void init_console(void)
 {	
 
-	cur_console = get_console();
+	cur_console = get_console();//cur_console이 엉뚱한 값을 가르키지 않도록 get_console로 배정하는 코드 추가.
 	
 	cur_console->Glob_x = 0;
 	cur_console->Glob_y = 2;

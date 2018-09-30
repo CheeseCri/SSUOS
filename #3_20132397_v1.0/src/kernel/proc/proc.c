@@ -124,8 +124,7 @@ void init_proc()
 	list_push_back(&p_list, &cur_process->elem_all);
 	list_push_back(&r_list, &cur_process->elem_stat);
 
-	cur_process->console = cur_console;
-	//cur_foreground_process = cur_process;
+	cur_process->console = cur_console;//처음 생성된 프로세스에 콘솔 지정.
 }
 
 pid_t getValidPid(int *idx) {
@@ -212,9 +211,11 @@ pid_t proc_create(proc_func func, struct proc_option *opt, void* aux)
 	p->elem_foreground.next = NULL;
 
 	//check option, set Console & Kbd
-	if(opt->foreground == TRUE && p->parent->pid != 0){//
-		p->console = get_console();
+	if(opt->foreground == TRUE && p->parent->pid != 0){//foreground 옵션이 True, parent pid가 0이 아닐 경우
+													   //즉, 처음 실행하는 로그인 프롬프트가 아닌 경우
+		p->console = get_console();//새로운 콘솔 할당
 
+		//콘솔 초기화 과정
 		p->console->Glob_x = 0;
 		p->console->Glob_y = 2;
 
@@ -226,27 +227,30 @@ pid_t proc_create(proc_func func, struct proc_option *opt, void* aux)
 		p->console->a_s = TRUE;
 
 		p->console->sum_y = 0;
+		//콘솔 초기화 종료
+
+		cur_console = p->console;//현재 콘솔을 현재 생성된 프로세스의 콘솔로 지정
 
 
-		cur_console = p->console;
+		p->kbd_buffer = get_kbd_buffer();//키보드 버퍼 지정
 
+		cur_foreground_process = p;//현재 프로세스를 cur_foreground_process로 지정
 
-		p->kbd_buffer = get_kbd_buffer();
-		cur_foreground_process = p;
-
-		list_push_back(&f_list, &p->elem_foreground);
+		list_push_back(&f_list, &p->elem_foreground);//f_list에 현재 프로세스 추가
 	}
-	else if(opt->foreground == TRUE && p->parent->pid == 0)
+	else if(opt->foreground == TRUE && p->parent->pid == 0)//foreground 옵션이 True, parent pid가 0일 경우
+														   //즉, 처음 실행하는 로그인 프롬프트 인 경우
 	{
-		p->console = p->parent->console;
-		p->kbd_buffer = get_kbd_buffer();
-		cur_foreground_process = p;
-		list_push_back(&f_list, &p->elem_foreground);
+		p->console = p->parent->console;//프로세스의 콘솔을 부모 프로세스의 콘솔로 지정.
+		p->kbd_buffer = get_kbd_buffer();//키보드 버퍼 지정
+
+		cur_foreground_process = p;//현재 프로세스를 cur_foreground_process로 지정
+		list_push_back(&f_list, &p->elem_foreground);//f_list에 현재 프로세스 추가
 
 	}
-	if(opt == NULL)
+	if(opt == NULL)//opt이 NULL일 경우
 	{
-		p->console = p->parent->console;
+		p->console = p->parent->console;//부모 프로세스의 콘솔을 물려받도록 설정.
 	}
 
 	//list element, kbd_buffer, console
@@ -453,8 +457,8 @@ void shell_proc(void* aux)
 		proc_func *func;
 		int i, len;
 
-		while(cur_process != cur_foreground_process)
-		;
+		while(cur_process != cur_foreground_process)//현재 프로세스와 현재 포어그라운드 프로세스와 주소값  비교
+		;											//동일 하지 않을 경우 대기하도록 while문 수
 		printk("> ");
 
 		while(getkbd(buf,BUFSIZ))
@@ -519,7 +523,7 @@ void idle(void* aux)
 
 	proc_create(kernel1_proc, NULL, NULL);
 	proc_create(kernel2_proc, NULL, NULL);
-	proc_create(login_prompt, &proc_opt,NULL);
+	proc_create(login_prompt, &proc_opt,NULL);//login_prompt 처음 실행 시에 foreground 프로세스라고 전달
 
 	while(1) {  
 		if(cur_process->pid != 0) {

@@ -44,8 +44,8 @@ int strncmp(char* b1, char* b2, int len)
 
 bool getkbd(char *buf, int len) 
 {
-	while(cur_process != cur_foreground_process)
-		;
+	while(cur_process != cur_foreground_process)//현재 프로세스와 현재 foreground 프로세스 주소값 비교
+		;										//같지 않을 경우 while문으로 대기 수행 
 
 	char ch;
 	int offset = 0;
