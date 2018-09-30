@@ -88,7 +88,7 @@ void UpdateKeyStat(BYTE Scancode)
 		{
 			KStat.CapslockFlag = FALSE;
 		}
-		else if(Scancode == 0x3A)화
+		else if(Scancode == 0x3A) 
 			KStat.CapslockFlag = TRUE;
 		else if(Scancode == 0x36 || Scancode == 0x2A)
 		{
@@ -105,7 +105,7 @@ void UpdateKeyStat(BYTE Scancode)
 			next_foreground_proc();//다음 foreground_process를 불러오는 함수 실행
 		if(Scancode == 0x26){//Tab 버튼의 다운 스캔코드가 들어왔을 경우
 			while(cur_foreground_process->console->Glob_y != 0)//cur_foreground_process의 콘솔 Glob_y의 값만큼
-				clearScreen();								   //
+				scroll();								   //
 			set_cursor();
 		}
 	}
