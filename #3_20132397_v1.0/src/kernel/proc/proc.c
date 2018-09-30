@@ -233,6 +233,8 @@ pid_t proc_create(proc_func func, struct proc_option *opt, void* aux)
 
 
 		p->kbd_buffer = get_kbd_buffer();//키보드 버퍼 지정
+		for(int i=0;i<KBD_BUFFER_SIZE;i++)
+			p->kbd_buffer->buf[i] = 0;
 
 		cur_foreground_process = p;//현재 프로세스를 cur_foreground_process로 지정
 
@@ -243,6 +245,8 @@ pid_t proc_create(proc_func func, struct proc_option *opt, void* aux)
 	{
 		p->console = p->parent->console;//프로세스의 콘솔을 부모 프로세스의 콘솔로 지정.
 		p->kbd_buffer = get_kbd_buffer();//키보드 버퍼 지정
+		for(int i=0;i<KBD_BUFFER_SIZE;i++)
+			p->kbd_buffer->buf[i] = 0;
 
 		cur_foreground_process = p;//현재 프로세스를 cur_foreground_process로 지정
 		list_push_back(&f_list, &p->elem_foreground);//f_list에 현재 프로세스 추가
