@@ -56,7 +56,7 @@ static bool kbd_remove_char();
 void init_kbd(void)
 {
 	KStat.ShiftFlag = 0;
-	KStat.CtrlFlag = 0; //Init CtrlFlag
+	KStat.CtrlFlag = 0; //컨트롤 버튼 플래그 초기화 추
 	KStat.CapslockFlag = 0;
 	KStat.NumlockFLag = 0;
 	KStat.ScrolllockFlag = 0;
@@ -71,15 +71,15 @@ void init_kbd(void)
 
 void UpdateKeyStat(BYTE Scancode)
 {
-	if(Scancode & 0x80) //???
+	if(Scancode & 0x80) //
 	{
 		if(Scancode == 0xB6 || Scancode == 0xAA)
 		{
 			KStat.ShiftFlag = FALSE;
 		}
-		if(Scancode == 0x9D)
+		if(Scancode == 0x9D)//컨트롤 버튼의 업 스캔코드가 들어왔을 경우
 		{
-			KStat.CtrlFlag = FALSE;
+			KStat.CtrlFlag = FALSE;//컨트롤 플래그 비활성
 		}
 	}
 	else
@@ -88,25 +88,24 @@ void UpdateKeyStat(BYTE Scancode)
 		{
 			KStat.CapslockFlag = FALSE;
 		}
-		else if(Scancode == 0x3A)
+		else if(Scancode == 0x3A)화
 			KStat.CapslockFlag = TRUE;
 		else if(Scancode == 0x36 || Scancode == 0x2A)
 		{
 			KStat.ShiftFlag = TRUE;
 		}
-		else if(Scancode == 0x1D){
-			KStat.CtrlFlag = TRUE;
+		else if(Scancode == 0x1D){//컨트롤 플래그 다운 스캔코드가 들어왔을 경우
+			KStat.CtrlFlag = TRUE;//컨트롤 플래그 활성
 		}
 	}
 
 
-	if(KStat.CtrlFlag == TRUE){
-		if(Scancode == 0x0F)
-			next_foreground_proc();
-			//printk("Ctrl Tab");
-		if(Scancode == 0x26){
-			while(cur_foreground_process->console->Glob_y != 0)//Clear Implementation
-				clearScreen();
+	if(KStat.CtrlFlag == TRUE){//컨트롤 플래그가 활성화 되어있을 때
+		if(Scancode == 0x0F)//알파벳 L의 다운 스캔코드가 들어왔을 경우
+			next_foreground_proc();//다음 foreground_process를 불러오는 함수 실행
+		if(Scancode == 0x26){//Tab 버튼의 다운 스캔코드가 들어왔을 경우
+			while(cur_foreground_process->console->Glob_y != 0)//cur_foreground_process의 콘솔 Glob_y의 값만큼
+				clearScreen();								   //
 			set_cursor();
 		}
 	}
