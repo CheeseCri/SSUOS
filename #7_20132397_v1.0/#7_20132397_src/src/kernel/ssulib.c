@@ -82,34 +82,34 @@ bool getkbd(char *buf, int len)
 		}
 		if(offset == len) offset--;
 	}
-	
-	/*
-	{
-		if (ch == '\b')
-		{
-			if(offset == 0)
-			{
-				set_cursor();
-				continue;
-			}
-			buf[offset-1] = 0;
-			offset -= 2;
-			printk("%c",ch);
-		}
-		else if (ch == '\n')
-		{
-			buf[offset] = ch;
-			printk("%c",ch);
-			return FALSE;
-		}
-		else
-		{
-			buf[offset] = ch;
-			printk("%c",ch);
-		}
 
-		if(offset < len) offset++;
-	}*/
+	/*
+	   {
+	   if (ch == '\b')
+	   {
+	   if(offset == 0)
+	   {
+	   set_cursor();
+	   continue;
+	   }
+	   buf[offset-1] = 0;
+	   offset -= 2;
+	   printk("%c",ch);
+	   }
+	   else if (ch == '\n')
+	   {
+	   buf[offset] = ch;
+	   printk("%c",ch);
+	   return FALSE;
+	   }
+	   else
+	   {
+	   buf[offset] = ch;
+	   printk("%c",ch);
+	   }
+
+	   if(offset < len) offset++;
+	   }*/
 
 	return TRUE;
 }
@@ -152,9 +152,9 @@ int generic_read(int fd, void *buf, size_t len)
 
 	if (~cursor->flags & O_RDONLY)
 		return -1;
-	
+
 	if (*pos + len > cursor->inode->sn_size);
-		len = cursor->inode->sn_size - *pos;
+	len = cursor->inode->sn_size - *pos;
 
 	file_read(cur_process->file[fd]->inode,*pos,buf,len);
 	*pos += len;
@@ -177,4 +177,88 @@ int generic_write(int fd, void *buf, size_t len)
 	*pos += len;
 	//printk("in generic write : %d \n", *pos);
 	return len;
+}
+//added
+int generic_lseek(int fd, int offset, int whence, int aux)
+{
+	//SEEK_SET 0
+	//SEEK_CUR 1
+	//SEEK_END -1
+	//
+	//E 0
+	//RE 1
+	//A 2
+	//C 3
+	struct ssufile *cursor;
+	uint16_t *pos = &(cur_process->file[fd]->pos);
+	int tmp_pos = *pos;
+	uint32_t f_size = cur_process->file[fd]->inode->sn_size;
+	int j = 0;
+
+	if( (cursor = cur_process->file[fd]) == NULL)
+		return -1;
+
+	if( ~cursor->flags & O_RDONLY)
+		return -1;
+
+	//whence flag 처리
+	//offset이 음수일때는??
+	if(whence == -1)
+		tmp_pos = cursor->inode->sn_size + offset;
+
+	if(whence == 0)
+		tmp_pos = offset;
+
+	if(whence == 1)
+		tmp_pos = tmp_pos + offset;
+
+	if(aux == -1)
+		if( tmp_pos < 0 || tmp_pos > cursor->inode->sn_size)
+			return -1;
+
+	printk("before pos : %d\n", tmp_pos);
+
+	if(aux == E){
+		printk("before e size : %d\n", cur_process->file[fd]->inode->sn_size); 
+		printk("*pos : %d\n", tmp_pos);
+		if(tmp_pos > f_size){
+			for(int i = 0; i < tmp_pos - f_size; i++){
+				printk("for i : %d\n", i);
+				file_write(cursor->inode, f_size + i, "", 1);
+			}
+		}
+		printk("after e size : %d\n", cur_process->file[fd]->inode->sn_size); 
+	}
+
+	if(aux == RE){
+		if(tmp_pos < 0){
+			for(int i = tmp_pos; i < 0; i++){
+				file_write(cursor->inode, f_size+j, "", 1);
+				j++;
+			}
+			for(int i = 0; i < f_size; i++){
+				file_read(cursor->inode, j+i, buf, wjeh 
+				
+			}
+		}
+	}
+
+	if(aux == A) {
+
+	}
+
+	if(aux == C) {
+		if(tmp_pos < 0){
+			printk("1. pos %d f_size %d\n", tmp_pos, f_size);
+			tmp_pos += f_size;
+		}
+		else if(tmp_pos > f_size){
+			printk("2. pos %d f_size %d\n", tmp_pos, f_size);
+			tmp_pos = tmp_pos - f_size;
+		}
+	}
+
+	*pos = tmp_pos;
+
+	return *pos;
 }

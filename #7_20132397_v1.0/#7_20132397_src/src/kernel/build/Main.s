@@ -394,15 +394,15 @@ print_contributors:
 	.file 10 "./include/syscall.h"
 	.section	.debug_info,"",@progbits
 .Ldebug_info0:
-	.long	0x4a5
+	.long	0x4ab
 	.value	0x4
 	.long	.Ldebug_abbrev0
 	.byte	0x4
 	.uleb128 0x1
-	.long	.LASF77
-	.byte	0xc
 	.long	.LASF78
+	.byte	0xc
 	.long	.LASF79
+	.long	.LASF80
 	.long	.Ltext0
 	.long	.Letext0-.Ltext0
 	.long	.Ldebug_line0
@@ -705,7 +705,7 @@ print_contributors:
 	.byte	0x4
 	.long	0xb3
 	.uleb128 0x10
-	.long	.LASF80
+	.long	.LASF81
 	.uleb128 0x9
 	.byte	0x4
 	.long	0x275
@@ -775,12 +775,12 @@ print_contributors:
 	.byte	0x4
 	.long	0x232
 	.uleb128 0x11
-	.long	.LASF81
+	.long	.LASF82
 	.byte	0x4
 	.long	0x33
 	.byte	0xa
 	.byte	0x4
-	.long	0x34a
+	.long	0x350
 	.uleb128 0x12
 	.long	.LASF52
 	.byte	0
@@ -808,13 +808,16 @@ print_contributors:
 	.uleb128 0x12
 	.long	.LASF60
 	.byte	0x8
+	.uleb128 0x12
+	.long	.LASF61
+	.byte	0x9
 	.byte	0
 	.uleb128 0x6
-	.long	.LASF61
+	.long	.LASF62
 	.byte	0x1c
 	.byte	0x8
 	.byte	0x39
-	.long	0x387
+	.long	0x38d
 	.uleb128 0x7
 	.long	.LASF15
 	.byte	0x8
@@ -822,7 +825,7 @@ print_contributors:
 	.long	0x56
 	.byte	0
 	.uleb128 0x7
-	.long	.LASF62
+	.long	.LASF63
 	.byte	0x8
 	.byte	0x3c
 	.long	0x61
@@ -834,34 +837,34 @@ print_contributors:
 	.long	0x56
 	.byte	0x4
 	.uleb128 0x7
-	.long	.LASF63
+	.long	.LASF64
 	.byte	0x8
 	.byte	0x3e
 	.long	0x1b9
 	.byte	0x8
 	.byte	0
 	.uleb128 0x6
-	.long	.LASF64
+	.long	.LASF65
 	.byte	0x38
 	.byte	0x8
 	.byte	0x41
-	.long	0x3a0
+	.long	0x3a6
 	.uleb128 0x7
-	.long	.LASF65
+	.long	.LASF66
 	.byte	0x8
 	.byte	0x43
-	.long	0x3a0
+	.long	0x3a6
 	.byte	0
 	.byte	0
 	.uleb128 0xe
-	.long	0x34a
-	.long	0x3b0
+	.long	0x350
+	.long	0x3b6
 	.uleb128 0xf
 	.long	0x22b
 	.byte	0x1
 	.byte	0
 	.uleb128 0x13
-	.long	.LASF66
+	.long	.LASF67
 	.byte	0x1
 	.byte	0x1c
 	.long	.LFB3
@@ -869,7 +872,7 @@ print_contributors:
 	.uleb128 0x1
 	.byte	0x9c
 	.uleb128 0x13
-	.long	.LASF67
+	.long	.LASF68
 	.byte	0x1
 	.byte	0x25
 	.long	.LFB4
@@ -877,7 +880,7 @@ print_contributors:
 	.uleb128 0x1
 	.byte	0x9c
 	.uleb128 0x13
-	.long	.LASF68
+	.long	.LASF69
 	.byte	0x1
 	.byte	0x55
 	.long	.LFB5
@@ -885,7 +888,7 @@ print_contributors:
 	.uleb128 0x1
 	.byte	0x9c
 	.uleb128 0x14
-	.long	.LASF82
+	.long	.LASF83
 	.byte	0x6
 	.byte	0x36
 	.long	0x232
@@ -893,7 +896,7 @@ print_contributors:
 	.byte	0x3
 	.long	filesys
 	.uleb128 0x15
-	.long	.LASF69
+	.long	.LASF70
 	.byte	0x9
 	.byte	0xc
 	.long	0x4f
@@ -901,7 +904,7 @@ print_contributors:
 	.byte	0x3
 	.long	Glob_x
 	.uleb128 0x15
-	.long	.LASF70
+	.long	.LASF71
 	.byte	0x9
 	.byte	0xd
 	.long	0x4f
@@ -909,7 +912,7 @@ print_contributors:
 	.byte	0x3
 	.long	Glob_y
 	.uleb128 0x15
-	.long	.LASF71
+	.long	.LASF72
 	.byte	0x8
 	.byte	0x47
 	.long	0xb3
@@ -917,7 +920,7 @@ print_contributors:
 	.byte	0x3
 	.long	ata0_blk_dev
 	.uleb128 0x15
-	.long	.LASF72
+	.long	.LASF73
 	.byte	0x8
 	.byte	0x48
 	.long	0xb3
@@ -926,16 +929,16 @@ print_contributors:
 	.long	ata1_blk_dev
 	.uleb128 0xe
 	.long	0x280
-	.long	0x448
+	.long	0x44e
 	.uleb128 0xf
 	.long	0x22b
 	.byte	0xff
 	.byte	0
 	.uleb128 0x15
-	.long	.LASF73
+	.long	.LASF74
 	.byte	0x7
 	.byte	0x2a
-	.long	0x438
+	.long	0x43e
 	.uleb128 0x5
 	.byte	0x3
 	.long	inode_tbl
@@ -943,36 +946,36 @@ print_contributors:
 	.string	"ata"
 	.byte	0x8
 	.byte	0x46
-	.long	0x387
+	.long	0x38d
 	.uleb128 0x5
 	.byte	0x3
 	.long	ata
 	.uleb128 0x15
-	.long	.LASF74
+	.long	.LASF75
 	.byte	0x1
 	.byte	0x18
-	.long	0x47b
+	.long	0x481
 	.uleb128 0x5
 	.byte	0x3
 	.long	VERSION
 	.uleb128 0x9
 	.byte	0x4
-	.long	0x481
+	.long	0x487
 	.uleb128 0xa
 	.long	0x2c
 	.uleb128 0x15
-	.long	.LASF75
+	.long	.LASF76
 	.byte	0x1
 	.byte	0x19
-	.long	0x47b
+	.long	0x481
 	.uleb128 0x5
 	.byte	0x3
 	.long	AUTHOR
 	.uleb128 0x15
-	.long	.LASF76
+	.long	.LASF77
 	.byte	0x1
 	.byte	0x1a
-	.long	0x47b
+	.long	0x481
 	.uleb128 0x5
 	.byte	0x3
 	.long	MODIFIER
@@ -1273,11 +1276,15 @@ print_contributors:
 	.string	"blk_dev_t"
 .LASF13:
 	.string	"blk_size_t"
-.LASF75:
+.LASF76:
 	.string	"AUTHOR"
+.LASF80:
+	.string	"/home/cheese/ssuosv2/SSUOS/#7_20132397_v1.0/#7_20132397_src/src/kernel"
 .LASF5:
 	.string	"short int"
-.LASF64:
+.LASF60:
+	.string	"SYS_LSEEK"
+.LASF65:
 	.string	"ata_interface"
 .LASF37:
 	.string	"sizetype"
@@ -1285,21 +1292,21 @@ print_contributors:
 	.string	"ssu_superblock"
 .LASF58:
 	.string	"SYS_READ"
-.LASF60:
+.LASF61:
 	.string	"SYS_NUM"
-.LASF82:
+.LASF83:
 	.string	"filesys"
 .LASF17:
 	.string	"blk_size"
 .LASF29:
 	.string	"semaphore"
-.LASF71:
+.LASF72:
 	.string	"ata0_blk_dev"
 .LASF57:
 	.string	"SYS_OPEN"
 .LASF46:
 	.string	"sn_type"
-.LASF72:
+.LASF73:
 	.string	"ata1_blk_dev"
 .LASF30:
 	.string	"value"
@@ -1311,13 +1318,13 @@ print_contributors:
 	.string	"SYS_SSUREAD"
 .LASF6:
 	.string	"uint8_t"
-.LASF80:
+.LASF81:
 	.string	"bitmap"
 .LASF56:
 	.string	"SYS_SHUTDOWN"
 .LASF12:
 	.string	"blk_cnt_t"
-.LASF65:
+.LASF66:
 	.string	"nodes"
 .LASF21:
 	.string	"read"
@@ -1329,13 +1336,13 @@ print_contributors:
 	.string	"fs_inodemap"
 .LASF44:
 	.string	"sn_ino"
-.LASF74:
+.LASF75:
 	.string	"VERSION"
 .LASF52:
 	.string	"SYS_FORK"
 .LASF16:
 	.string	"blk_count"
-.LASF73:
+.LASF74:
 	.string	"inode_tbl"
 .LASF19:
 	.string	"blk_dev"
@@ -1345,11 +1352,11 @@ print_contributors:
 	.string	"unsigned char"
 .LASF31:
 	.string	"waiters"
-.LASF66:
+.LASF67:
 	.string	"ssuos_main"
 .LASF35:
 	.string	"sb_volname"
-.LASF78:
+.LASF79:
 	.string	"arch/Main.c"
 .LASF4:
 	.string	"signed char"
@@ -1385,25 +1392,23 @@ print_contributors:
 	.string	"list"
 .LASF49:
 	.string	"sn_directblock"
-.LASF68:
+.LASF69:
 	.string	"print_contributors"
 .LASF48:
 	.string	"sn_refcount"
-.LASF79:
-	.string	"/home/minijw/\353\260\224\355\203\225\355\231\224\353\251\264/#SSUOS_P7_lseek/SSUOS_P7_lseek/src/kernel"
 .LASF38:
 	.string	"ssu_fs"
-.LASF76:
+.LASF77:
 	.string	"MODIFIER"
 .LASF36:
 	.string	"padding"
 .LASF53:
 	.string	"SYS_EXIT"
-.LASF63:
+.LASF64:
 	.string	"sema"
 .LASF54:
 	.string	"SYS_WAIT"
-.LASF61:
+.LASF62:
 	.string	"ata_device"
 .LASF34:
 	.string	"sb_nblocks"
@@ -1411,21 +1416,21 @@ print_contributors:
 	.string	"device_info"
 .LASF40:
 	.string	"fs_device"
-.LASF67:
+.LASF68:
 	.string	"main_init"
-.LASF77:
+.LASF78:
 	.string	"GNU C11 5.4.0 20160609 -m32 -mtune=generic -march=i686 -g -O0 -ffreestanding -fno-stack-protector"
-.LASF62:
+.LASF63:
 	.string	"port_addr"
 .LASF39:
 	.string	"fs_sb"
 .LASF24:
 	.string	"prev"
-.LASF69:
-	.string	"Glob_x"
 .LASF70:
+	.string	"Glob_x"
+.LASF71:
 	.string	"Glob_y"
-.LASF81:
+.LASF82:
 	.string	"SYS_LIST"
 .LASF25:
 	.string	"next"

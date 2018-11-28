@@ -13,6 +13,11 @@
 #define SEEK_CUR 1
 #define SEEK_END -1
 
+#define E 0
+#define RE 1
+#define A 2
+#define C 3
+
 struct ssufile {
 	struct inode *inode;
 	uint16_t pos;

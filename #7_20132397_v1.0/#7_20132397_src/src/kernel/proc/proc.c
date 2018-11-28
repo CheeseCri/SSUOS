@@ -62,11 +62,11 @@ void init_proc()
 	}
 
 	pid_t pid = getValidPid(&i);
-    cur_process = &procs[i];
+	cur_process = &procs[i];
 
-    cur_process->pid = pid;
-    cur_process->parent = NULL;
-    cur_process->state = PROC_RUN;
+	cur_process->pid = pid;
+	cur_process->parent = NULL;
+	cur_process->state = PROC_RUN;
 	cur_process->priority = 0;
 	cur_process->stack = 0;
 	cur_process->pd = (void*)read_cr3();
@@ -130,13 +130,13 @@ pid_t proc_create(proc_func func, struct proc_option *opt, void* aux, void* aux2
 	p->simple_lock = 0;
 	p->child_pid = -1;
 	p->pd = pd_create(pid);
-	
+
 	int i;
 	for(i=0;i<NR_FILEDES;i++)
 		p->file[i] = NULL;
 
 	//init stack
-    int *top = (int*)palloc_get_page();
+	int *top = (int*)palloc_get_page();
 	int stack = (int)top;
 	top = (int*)stack + STACK_SIZE - 1;
 
@@ -174,7 +174,7 @@ pid_t proc_create(proc_func func, struct proc_option *opt, void* aux, void* aux2
 
 void* getEIP()
 {
-    return __builtin_return_address(0);
+	return __builtin_return_address(0);
 }
 
 void  proc_start(void)
@@ -209,7 +209,7 @@ void proc_wake(void)
 	struct process* p;
 	unsigned long long t = get_ticks();
 
-    while(!list_empty(&s_list))
+	while(!list_empty(&s_list))
 	{
 		p = list_entry(list_front(&s_list), struct process, elem_stat);
 		if(p->time_sleep > t)
@@ -253,14 +253,14 @@ bool less_time_sleep(const struct list_elem *a, const struct list_elem *b,void *
 	struct process *p1 = list_entry(a, struct process, elem_stat);
 	struct process *p2 = list_entry(b, struct process, elem_stat);
 
-    return p1->time_sleep < p2->time_sleep;
+	return p1->time_sleep < p2->time_sleep;
 }
 
 bool more_prio(const struct list_elem *a, const struct list_elem *b,void *aux)
 {
 	struct process *p1 = list_entry(a, struct process, elem_stat);
 	struct process *p2 = list_entry(b, struct process, elem_stat);
-    return p1->priority > p2->priority;
+	return p1->priority > p2->priority;
 }
 
 
@@ -359,28 +359,73 @@ void cat_proc(void *aux)
 	printk("%s\n",buf);
 }
 
-void lseek_proc(void *aux , void *filename)
+void lseek_proc( void *filename, void *aux)
 {
-
 	char buf[BUFSIZ] = {0};
 	int fd;
 	fd = open(filename, O_RDWR);
 	if (fd < 0 )return;
-	write(fd , "ssuos ",6);
-	//if you add lseek() system call , remove the '//'
-//	printk ("%d \n ", lseek(fd, -3, SEEK_CUR));  
-	write(fd, "world",5);
-//	lseek(fd, 0, SEEK_SET);
-	read(fd , buf, 8);
-	printk("%s\n", buf);
-	//lseek(fd, -9, SEEK_END);
-	read(fd, buf, 9);
-	printk("%s\n", buf);
+
+	//aux 인자 처리
+	//opt 기본값 = -1
+	int opt = -1;
+
+	if(strcmp(aux, "") != 0){
+		if(strcmp(aux, "e") == 0)
+			opt = 0;
+		else if(strcmp(aux, "re") == 0)
+			opt = 1;
+		else if(strcmp(aux, "a") == 0)
+			opt = 2;
+		else if(strcmp(aux, "c") == 0)
+			opt = 3;
+		else
+			printk("No Matching Option\n");
+	}
+
+	printk("opt : %d\n", opt);
+
+	//옵션이 없는 경우
+	if(opt == -1){
+		write(fd , "ssuos ",6);
+		//if you add lseek() system call , remove the '//'
+		printk ("%d \n", lseek(fd, -3, SEEK_CUR, opt));  
+		write(fd, "world",5);
+		lseek(fd, 0, SEEK_SET, opt);
+		read(fd , buf, 8);
+		printk("%s\n", buf);
+		lseek(fd, -9, SEEK_END, opt);
+		read(fd, buf, 9);
+		printk("%s\n", buf);
+	}
 
 	//ssuworld 가 정확히 출력되어야 함
 	// 옵션에 대한 시나리오 및 검증할 코드 아래에 추가
 	// 각 옵션에 대해 파일 크기 및 내용이 정확하게 채워지는지 보여야 함
 	/*   option  */
+
+	//e 옵션 시나리오
+	if(opt == E){
+		write(fd, "ssuos", 5);
+		printk("%d\n", lseek(fd, 3, SEEK_CUR, opt));
+		list_segment(cur_process->cwd);
+	}
+	//re 옵션 시나리오
+	if(opt == RE){
+
+	}
+
+	if(opt == A){
+	}
+
+	if(opt == C){
+		write(fd, "ssuos", 5);
+		printk("%d\n", lseek(fd, -3, SEEK_SET, opt));
+		read(fd, buf, 2);
+		printk("%s\n", buf);
+	}
+
+
 }
 
 
@@ -429,18 +474,18 @@ void shell_proc(void* aux)
 			for(j=0;j<TOKNUM;j++)
 				token[j][i] = 0;
 		}
-		
+
 		while(getkbd(buf,BUFSIZ))
 		{
 			; 
 		}
-		
+
 		for(i=0;buf[i] != '\n'; i++); 
 		for(i--; buf[i] == ' '; i--)
 			buf[i] = 0;
 
-//		for( i = 0 ; buf[i] == ' ' ; i++)
-//			buf[i] = 0;
+		//		for( i = 0 ; buf[i] == ' ' ; i++)
+		//			buf[i] = 0;
 
 		token_num = getToken(buf,token,TOKNUM);
 
@@ -463,7 +508,7 @@ void shell_proc(void* aux)
 			}
 			continue;
 		}
-		
+
 		for(i = 0; i < CMDNUM; i++)
 		{
 			if( strncmp(cmdlist[i].cmd, token[0], BUFSIZ) == 0)
@@ -507,7 +552,7 @@ void login_proc(void* aux)
 	char buf2[] = "ssuos:oslab";
 
 	cur_process -> priority = 100;
-	
+
 	//fd = open("passwd",O_RDWR);
 	//write(fd,buf2,11);
 	//fd = open("passwd",O_RDWR);
@@ -520,10 +565,10 @@ void login_proc(void* aux)
 		}
 		printk("id : ");
 		while(getkbd(id,BUFSIZ));
-	    
+
 		printk("password : ");
-	    while(getkbd(password,BUFSIZ));
-		
+		while(getkbd(password,BUFSIZ));
+
 		if(id[6] != 0 || strncmp(id,buf2,5) != 0) {printk("%s\n",id); continue;}
 		if(password[6] != 0 || strncmp(password,buf2+6,5) != 0) {printk("%s\n",password); continue;}
 		shell_proc(NULL);
@@ -564,13 +609,13 @@ void proc_print_data()
 
 	__asm__ __volatile("mov %ebx ,%eax");
 	__asm__ __volatile("mov %%eax ,%0": "=m"(b));
-	
+
 	__asm__ __volatile("mov %ecx ,%eax");
 	__asm__ __volatile("mov %%eax ,%0": "=m"(c));
-	
+
 	__asm__ __volatile("mov %edx ,%eax");
 	__asm__ __volatile("mov %%eax ,%0": "=m"(d));
-	
+
 	//ebp esi edi esp
 	__asm__ __volatile("mov %ebp ,%eax");
 	__asm__ __volatile("mov %%eax ,%0": "=m"(bp));
@@ -590,51 +635,51 @@ void proc_print_data()
 }
 
 void hexDump (void *addr, int len) {
-    int i;
-    unsigned char buff[17];
-    unsigned char *pc = (unsigned char*)addr;
+	int i;
+	unsigned char buff[17];
+	unsigned char *pc = (unsigned char*)addr;
 
-    if (len == 0) {
-        printk("  ZERO LENGTH\n");
-        return;
-    }
-    if (len < 0) {
-        printk("  NEGATIVE LENGTH: %i\n",len);
-        return;
-    }
+	if (len == 0) {
+		printk("  ZERO LENGTH\n");
+		return;
+	}
+	if (len < 0) {
+		printk("  NEGATIVE LENGTH: %i\n",len);
+		return;
+	}
 
-    // Process every byte in the data.
-    for (i = 0; i < len; i++) {
-        // Multiple of 16 means new line (with line offset).
+	// Process every byte in the data.
+	for (i = 0; i < len; i++) {
+		// Multiple of 16 means new line (with line offset).
 
-        if ((i % 16) == 0) {
-            // Just don't print ASCII for the zeroth line.
-            if (i != 0)
-                printk ("  %s\n", buff);
+		if ((i % 16) == 0) {
+			// Just don't print ASCII for the zeroth line.
+			if (i != 0)
+				printk ("  %s\n", buff);
 
-            // Output the offset.
-            printk ("  %04x ", i);
-        }
+			// Output the offset.
+			printk ("  %04x ", i);
+		}
 
-        // Now the hex code for the specific character.
-        printk (" %02x", pc[i]);
+		// Now the hex code for the specific character.
+		printk (" %02x", pc[i]);
 
-        // And store a printable ASCII character for later.
-        if ((pc[i] < 0x20) || (pc[i] > 0x7e))
-            buff[i % 16] = '.';
-        else
-            buff[i % 16] = pc[i];
-        buff[(i % 16) + 1] = '\0';
-    }
+		// And store a printable ASCII character for later.
+		if ((pc[i] < 0x20) || (pc[i] > 0x7e))
+			buff[i % 16] = '.';
+		else
+			buff[i % 16] = pc[i];
+		buff[(i % 16) + 1] = '\0';
+	}
 
-    // Pad out last line if not exactly 16 characters.
-    while ((i % 16) != 0) {
-        printk ("   ");
-        i++;
-    }
+	// Pad out last line if not exactly 16 characters.
+	while ((i % 16) != 0) {
+		printk ("   ");
+		i++;
+	}
 
-    // And print the final ASCII bit.
-    printk ("  %s\n", buff);
+	// And print the final ASCII bit.
+	printk ("  %s\n", buff);
 }
 
 

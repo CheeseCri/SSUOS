@@ -68,6 +68,27 @@
 		ret;									\
 		})
 
+#define syscall4(SYS_NUM, ARG0, ARG1, ARG2, ARG3) ({	\
+		int ret;								\
+		__asm__ __volatile(						\
+				"pushl %[arg3] \n\t"			\
+				"pushl %[arg2] \n\t"			\
+				"pushl %[arg1] \n\t"			\
+				"pushl %[arg0] \n\t"			\
+				"pushl %[num] \n\t"				\
+				"int $0x30\n\t"					\
+				"addl %%esp, 20"				\
+				:								\
+				: [num] "g" (SYS_NUM),			\
+				[arg0] "g" (ARG0),				\
+				[arg1] "g" (ARG1),				\
+				[arg2] "g" (ARG2),				\
+				[arg3] "g" (ARG3)				\
+				);								\
+		ret;									\
+		})
+
+
 int syscall_tbl[SYS_NUM][2];
 
 #define REGSYS(NUM, FUNC, ARG) \
@@ -85,6 +106,7 @@ void init_syscall(void)
 	REGSYS(SYS_OPEN, do_open, 2);
 	REGSYS(SYS_READ, do_read, 3);
 	REGSYS(SYS_WRITE, do_write, 3);
+	REGSYS(SYS_LSEEK, do_lseek, 4);//added
 }
 
 void exit(int status)
@@ -125,6 +147,12 @@ int read(int fd, char *buf, size_t len)
 int write(int fd, const char *buf, size_t len)
 {
 	return syscall3(SYS_WRITE, fd, buf, len);
+}
+//lseek 구현 added
+int lseek(int fd, int offset, int whence, int aux)
+{
+	//syscall
+	return syscall4(SYS_LSEEK, fd, offset, whence, aux);
 }
 
 
