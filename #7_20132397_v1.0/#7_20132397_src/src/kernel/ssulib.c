@@ -236,10 +236,12 @@ int generic_lseek(int fd, int offset, int whence, int aux)
 				file_write(cursor->inode, f_size+j, "", 1);
 				j++;
 			}
-			for(int i = 0; i < f_size; i++){
-				file_read(cursor->inode, j+i, buf, wjeh 
-				
+			file_read(cursor->inode, 0, buf, f_size);
+			printk("read buf : \"%s\"\n", buf);
+			for(int i = 0; i < j; i++){
+				file_write(cursor->inode, i, "", 1);
 			}
+			file_write(cursor->inode, j, buf, f_size);
 		}
 	}
 
