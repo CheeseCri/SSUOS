@@ -257,7 +257,7 @@ int generic_lseek(int fd, int offset, int whence, int aux)
 
 		for(int i = 0; i < offset; i++){
 			file_write(cursor->inode, f_size+i, "0", 1);
-		}현
+		}
 		file_read(cursor->inode, 0, buf, tmp_pos);
 		file_read(cursor->inode, tmp_pos, buf2, f_size - tmp_pos);
 
