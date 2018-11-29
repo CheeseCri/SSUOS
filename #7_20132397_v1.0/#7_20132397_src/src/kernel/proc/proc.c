@@ -369,7 +369,6 @@ void lseek_proc( void *filename, void *aux)
 	//aux 인자 처리
 	//opt 기본값 = -1
 	int opt = -1;
-
 	if(strcmp(aux, "") != 0){
 		if(strcmp(aux, "e") == 0)
 			opt = 0;

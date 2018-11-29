@@ -148,7 +148,7 @@ int write(int fd, const char *buf, size_t len)
 {
 	return syscall3(SYS_WRITE, fd, buf, len);
 }
-//lseek 구현 added
+//lseek 구현 추가됨
 int lseek(int fd, int offset, int whence, int aux)
 {
 	//syscall

@@ -178,7 +178,7 @@ int generic_write(int fd, void *buf, size_t len)
 	//printk("in generic write : %d \n", *pos);
 	return len;
 }
-//added
+//lseek 구현 추가됨
 int generic_lseek(int fd, int offset, int whence, int aux)
 {
 	//SEEK_SET 0
@@ -205,7 +205,6 @@ int generic_lseek(int fd, int offset, int whence, int aux)
 		return -1;
 
 	//whence flag 처리
-	//offset이 음수일때는??
 	if(whence == -1)
 		tmp_pos = cursor->inode->sn_size + offset;
 
@@ -215,19 +214,21 @@ int generic_lseek(int fd, int offset, int whence, int aux)
 	if(whence == 1)
 		tmp_pos = tmp_pos + offset;
 
+	//옵션 없을 시 에러처리
 	if(aux == -1)
 		if( tmp_pos < 0 || tmp_pos > cursor->inode->sn_size)
 			return -1;
 
+	//e 옵션 구현 
 	if(aux == E){
 		if(tmp_pos > f_size){
 			for(int i = 0; i < tmp_pos - f_size; i++){
-				printk("for i : %d\n", i + f_size);
 				file_write(cursor->inode, f_size + i, "0", 1);
 			}
 		}
 	}
 
+	//re 옵션 구현 
 	if(aux == RE){
 		if(tmp_pos < 0){
 			for(int i = tmp_pos; i < 0; i++){
@@ -243,6 +244,7 @@ int generic_lseek(int fd, int offset, int whence, int aux)
 		}
 	}
 
+	//a 옵션 구현
 	if(aux == A) {
 		if(whence == -1)
 			tmp_pos = f_size;
@@ -255,7 +257,7 @@ int generic_lseek(int fd, int offset, int whence, int aux)
 
 		for(int i = 0; i < offset; i++){
 			file_write(cursor->inode, f_size+i, "0", 1);
-		}
+		}현
 		file_read(cursor->inode, 0, buf, tmp_pos);
 		file_read(cursor->inode, tmp_pos, buf2, f_size - tmp_pos);
 
@@ -267,6 +269,7 @@ int generic_lseek(int fd, int offset, int whence, int aux)
 		tmp_pos += offset;
 	}
 
+	//c 옵션 구현
 	if(aux == C) {
 		if(tmp_pos < 0){
 			tmp_pos += f_size;

@@ -83,7 +83,7 @@ int do_write(int fd, const char *buf, int len)
 {
 	return generic_write(fd, (void *)buf, len);
 }
-//added
+//lseek 구현 추가됨
 int do_lseek(int fd, int offset, int whence, int aux)
 {
 	return generic_lseek(fd, offset, whence, aux);

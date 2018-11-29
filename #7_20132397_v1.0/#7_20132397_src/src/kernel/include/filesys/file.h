@@ -13,6 +13,7 @@
 #define SEEK_CUR 1
 #define SEEK_END -1
 
+//내부에서 쓸 옵션 매크로 추가
 #define E 0
 #define RE 1
 #define A 2
