@@ -383,7 +383,6 @@ void lseek_proc( void *filename, void *aux)
 			printk("No Matching Option\n");
 	}
 
-	printk("opt : %d\n", opt);
 
 	//옵션이 없는 경우
 	if(opt == -1){
@@ -404,24 +403,61 @@ void lseek_proc( void *filename, void *aux)
 	// 각 옵션에 대해 파일 크기 및 내용이 정확하게 채워지는지 보여야 함
 	/*   option  */
 
-	//e 옵션 시나리오
+	/*
+	---e 옵션 시나리오---
+	ssuos를 파일에 입력 후, 현재 *pos가 5일 때 
+	e 옵션, 오프셋 3 으로 lseek 수행
+	예상되는 출력 : "ssuos000" 
+	*/
 	if(opt == E){
 		write(fd, "ssuos", 5);
 		printk("%d\n", lseek(fd, 3, SEEK_CUR, opt));
-		list_segment(cur_process->cwd);
+		lseek(fd, -8, SEEK_END, -1);
+		read(fd, buf, 8);
+		printk("%s\n", buf);
 	}
-	//re 옵션 시나리오
+	/*
+	---re 옵션 시나리오---
+	ssuos를 파일에 입력후, 파일 pos 2 에서
+	re옵션, 오프셋 -5 으로 lseek 수행
+	예상되는 출력 : "000ssuos"
+	*/
 	if(opt == RE){
-
+		write(fd, "ssuos", 6);
+		printk("before re *pos : %d\n", lseek(fd, 2, SEEK_SET, -1));
+		printk("after  re *pos : %d\n", lseek(fd, -5, SEEK_CUR, opt));
+		read(fd, buf, 9);
+		printk("%s\n", buf);
 	}
-
+	/*
+	---a 옵션 시나리오---
+	ssuos를 파일 입력후, 파일 pos 3에서
+	a 옵션, 오프셋 2 으로 lseek 수행
+	예상되는 출력 : "ssu00os"
+	*/
 	if(opt == A){
+		write(fd, "ssuos", 6);
+		lseek(fd, 3, SEEK_SET, -1);
+		printk("%d\n", lseek(fd, 2, SEEK_CUR, opt));
+		lseek(fd, -8, SEEK_END, -1);
+		read(fd, buf, 9);
+		printk("%s\n", buf);
 	}
-
+	/*
+	---c 옵션 시나리오---
+	ssuos를 파일 입력후, 파일 pos 5에서
+	c 옵션, 오프셋 2와 -2 로 lseek 수행
+	예상 되는 출력 : 1, "suos" /  5, ""
+	*/
 	if(opt == C){
-		write(fd, "ssuos", 5);
-		printk("%d\n", lseek(fd, -3, SEEK_SET, opt));
-		read(fd, buf, 2);
+		write(fd, "ssuos", 6);
+		lseek(fd, -1, SEEK_END, -1);
+		printk("%d\n", lseek(fd, 2, SEEK_CUR, opt));
+		read(fd, buf, 5);
+		printk("%s\n", buf);
+		lseek(fd, -5, SEEK_CUR, -1);
+		printk("%d\n", lseek(fd, -2, SEEK_CUR, opt));
+		read(fd, buf, 5);
 		printk("%s\n", buf);
 	}
 

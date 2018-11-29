@@ -189,6 +189,9 @@ int generic_lseek(int fd, int offset, int whence, int aux)
 	//RE 1
 	//A 2
 	//C 3
+	char buf[BUFSIZ] = {0};
+	char buf2[BUFSIZ] = {0};
+
 	struct ssufile *cursor;
 	uint16_t *pos = &(cur_process->file[fd]->pos);
 	int tmp_pos = *pos;
@@ -216,46 +219,59 @@ int generic_lseek(int fd, int offset, int whence, int aux)
 		if( tmp_pos < 0 || tmp_pos > cursor->inode->sn_size)
 			return -1;
 
-	printk("before pos : %d\n", tmp_pos);
-
 	if(aux == E){
-		printk("before e size : %d\n", cur_process->file[fd]->inode->sn_size); 
-		printk("*pos : %d\n", tmp_pos);
 		if(tmp_pos > f_size){
 			for(int i = 0; i < tmp_pos - f_size; i++){
-				printk("for i : %d\n", i);
-				file_write(cursor->inode, f_size + i, "", 1);
+				printk("for i : %d\n", i + f_size);
+				file_write(cursor->inode, f_size + i, "0", 1);
 			}
 		}
-		printk("after e size : %d\n", cur_process->file[fd]->inode->sn_size); 
 	}
 
 	if(aux == RE){
 		if(tmp_pos < 0){
 			for(int i = tmp_pos; i < 0; i++){
-				file_write(cursor->inode, f_size+j, "", 1);
+				file_write(cursor->inode, f_size+j, "0", 1);
 				j++;
 			}
 			file_read(cursor->inode, 0, buf, f_size);
-			printk("read buf : \"%s\"\n", buf);
 			for(int i = 0; i < j; i++){
-				file_write(cursor->inode, i, "", 1);
+				file_write(cursor->inode, i, "0", 1);
 			}
 			file_write(cursor->inode, j, buf, f_size);
+			tmp_pos = 0;
 		}
 	}
 
 	if(aux == A) {
+		if(whence == -1)
+			tmp_pos = f_size;
 
+		if(whence == 0)
+			tmp_pos = 0;
+
+		if(whence == 1)
+			tmp_pos = *pos;
+
+		for(int i = 0; i < offset; i++){
+			file_write(cursor->inode, f_size+i, "0", 1);
+		}
+		file_read(cursor->inode, 0, buf, tmp_pos);
+		file_read(cursor->inode, tmp_pos, buf2, f_size - tmp_pos);
+
+		for(int i = 0; i < offset; i++){
+			file_write(cursor->inode, tmp_pos + i, "0", 1);
+		}
+		file_write(cursor->inode, tmp_pos+offset, buf2, f_size-tmp_pos);
+		
+		tmp_pos += offset;
 	}
 
 	if(aux == C) {
 		if(tmp_pos < 0){
-			printk("1. pos %d f_size %d\n", tmp_pos, f_size);
 			tmp_pos += f_size;
 		}
 		else if(tmp_pos > f_size){
-			printk("2. pos %d f_size %d\n", tmp_pos, f_size);
 			tmp_pos = tmp_pos - f_size;
 		}
 	}
